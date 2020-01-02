@@ -429,3 +429,443 @@ int main(){
 					cout<<"Pilih Menu : ";
 					cin>>pilih;
 					system("clear");
+					switch(pilih){
+						case 1:
+							cout<<"0. Kembali"<<endl;
+							cout<<"---------------------------------------------------------------------------------------------------------------"<<endl;
+							cout<<"|"<<" No "<<"|"<<"   No TNKB   "<<"|"<<"   Nama Konsumen   "<<"|"
+							<<"       Alamat       "<<"|"<<"    Nama Driver    "<<"|"<<"  Mulai Sewa  "<<"|"<<" Pengembalian "<<"|"<<endl;
+							cout<<"---------------------------------------------------------------------------------------------------------------"<<endl;
+							
+							printPenyewaan(Penyewaan,no);
+							cout<<"---------------------------------------------------------------------------------------------------------------"<<endl;
+							cin>>pilih;
+							system("clear");
+
+							break;
+						case 2:
+							if(!isEmpty(konsumen)){
+								do{
+									string ulang;
+									ulang:
+									nama = getNama(konsumen);
+									cout<<"Silahkan Saudara "<<nama<<" memilih mobil yang akan disewa"<<endl;
+									cout<<"------------------------------------------------------------------------"<<endl;
+									cout<<"| No |"<<"   No TNKB  |"<<"       MERK      |"<<"    WARNA   |"<<"  TAHUN  |"
+									<<"   BIAYA   |"<<endl;
+									cout<<"------------------------------------------------------------------------"<<endl;
+									availableMobil(mobil,no);
+									cout<<"------------------------------------------------------------------------"<<endl;
+									
+									cout<<"Pilih mobil : ";
+									cin>>select;
+
+									cout<<"Tanggal Sewa [dd-mm-yyyy]\t: ";
+									cin>>sewa.Tanggal>>sewa.Bulan>>sewa.Tahun;
+									sewa.Tanggal = abs(sewa.Tanggal);
+									sewa.Bulan = abs(sewa.Bulan);
+									sewa.Tahun = abs(sewa.Tahun);
+
+									cout<<"Tanggal Kembali [dd-mm-yyyy]\t: ";
+									cin>>kembali.Tanggal>>kembali.Bulan>>kembali.Tahun;
+									//getRealNumber
+									kembali.Tanggal = abs(kembali.Tanggal);
+									kembali.Bulan = abs(kembali.Bulan);
+									kembali.Tahun = abs(kembali.Tahun);
+
+									if(kembali.Tanggal - sewa.Tanggal >=1 && kembali.Bulan - sewa.Bulan >=0
+										&& kembali.Tahun - sewa.Tahun >=0){
+										cout<<"Dengan Driver [y/N] : ";
+										cin>>opsi;
+										if(opsi == 'Y' || opsi == 'y')
+											Task(&Driver,&nama_driver);
+										else
+											nama_driver = "";
+
+										Rent(mobil,tnkb,biayasewa,select,no);//Update status mobil
+										delKonsumen(&konsumen,&nama,&alamat);//getData Konsumen
+
+										Data_Pinjam = Alokasi(nama,alamat,tnkb,nama_driver,sewa,kembali,biayasewa);
+										addPenyewaan(Penyewaan,Data_Pinjam);
+
+									}else{
+										cout<<"Sewa minimal 1 hari"<<endl;										
+									}
+									cout<<"ulangi transaksi [y/N]: ";
+									cin>>opsi;
+									if(opsi == 'Y' || opsi == 'y'){
+										system("clear");
+										goto ulang;
+										
+									}else
+										system("clear");
+										//break;
+
+								}while(opsi != 'N' || opsi == 'n');
+
+							}else{
+								cout<<"Belum ada data konsumen yang tersimpan"<<endl;
+							}
+
+							break;
+						case 9:
+							break;
+						default:
+							cout<<"Menu yang anda pilih tidak tersedia"<<endl;
+					}
+				}while(pilih!=9);
+
+				break;
+			case 5:
+				do{
+					cout<<"------------------------------------------------------"<<endl;
+					cout<<"\t\t\"TRANSAKSI  PEMBAYARAN\""<<endl;
+					cout<<"------------------------------------------------------"<<endl;
+					cout<<" 1. Tampilkan Data Pembayaran"<<endl;
+					cout<<" 2. Transaksi Pembayaran"<<endl;
+					cout<<" 9. Kembali"<<endl;
+					cout<<"------------------------------------------------------"<<endl;
+					cout<<"Pilih Menu : ";
+					cin>>pilih;
+					system("clear");
+					switch(pilih){
+						case 1:
+							cout<<"0. Kembali"<<endl;
+							cout<<"-----------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+							cout<<"|"<<" No "<<"|"<<"   No TNKB   "<<"|"<<"   Nama Konsumen   "<<"|"
+							<<"       Alamat       "<<"|"<<"    Nama Driver    "<<"|"<<"  Mulai Sewa  "
+							<<"|"<<"  Pembayaran  "<<"|"<<"   Denda   "<<"|"<<" Total Bayar "<<"|"<<endl;
+							cout<<"-----------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+							
+							printPembayaran(Bayar_sewa,no);
+							cout<<"-----------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+							cin>>pilih;
+							system("clear");
+
+							break;
+						case 2:
+							cout<<"---------------------------------------------------------------------------------------------------------------"<<endl;
+							cout<<"|"<<" No "<<"|"<<"   No TNKB   "<<"|"<<"   Nama Konsumen   "<<"|"
+							<<"       Alamat       "<<"|"<<"    Nama Driver    "<<"|"<<"  Mulai Sewa  "<<"|"<<" Pengembalian "<<"|"<<endl;
+							cout<<"---------------------------------------------------------------------------------------------------------------"<<endl;
+							
+							printPenyewaan(Penyewaan,no);
+							cout<<"---------------------------------------------------------------------------------------------------------------"<<endl;
+							cout<<"Pilih Transaksi : ";
+							cin>>select;
+							cout<<"Masukkan Tanggal [dd-mm-yyyy] : ";
+							cin>>bayar.Tanggal>>bayar.Bulan>>bayar.Tahun;
+							delTransaksi(Penyewaan,&nama,&alamat,&tnkb,&sewa,&kembali,&nama_driver,&biayasewa,select,no);
+							
+							//change to available
+							inisialisasiMobil(mobil,tnkb); 
+							inisialisasiDriver(&Driver,nama_driver);
+
+							//getRealNumber
+							bayar.Tanggal = abs(bayar.Tanggal);
+							bayar.Bulan = abs(bayar.Bulan);
+							bayar.Tahun = abs(bayar.Tahun);
+							
+							bayarSewa(nama_driver,kembali,bayar,sewa,biayasewa,denda,totbiaya);
+							Data_Pembayaran = Alokasi(nama,alamat,tnkb,nama_driver,sewa,bayar,denda,totbiaya);
+
+							addPembayaran(Bayar_sewa,Data_Pembayaran);
+							system("clear");
+
+							break;
+						case 9:
+							break;
+						default:
+							cout<<"Menu yang anda pilih tidak tersedia"<<endl;
+					}
+				}while(pilih!=9);
+
+				break;
+			case 0:
+				cout<<"Back with darkness"<<endl;
+				break;
+			default:
+				cout<<"Menu yang anda pilih tidak tersedia"<<endl;
+		}
+	}while(pilih != 0);
+	
+	return 0;
+}
+
+void CreateEmpty(List &L){
+	L = NULL;	
+}
+
+bool IsEmpty(List L){
+	return (L == NULL);
+}
+
+bool IsOneElement(List L){
+	return (IsEmpty(L->Next));
+}
+
+bool isRent(List L){
+	return (L->sewa == 1);
+}
+
+void insertFirst(List &L,address P){
+	P->Next = L;
+	L = P;
+}
+
+void insertAfter(List &L,address Prec,address P){
+	P->Next = Prec->Next;
+	Prec->Next = P;
+}
+
+address alokasi(infotype tnkb,infotype merk,infotype warna,infotype tahun,int biaya){
+	address P = new(Mobil);
+
+	if(P == NULL)
+		return NULL;
+	else{
+		P->NoTNKB = tnkb;
+		P->Merk = merk;
+		P->Warna = warna;
+		P->Tahun = tahun;
+		P->biayaSewa = biaya;
+		P->sewa = 0;
+		P->Next = NULL;
+		return P;
+	}
+}
+
+void addMobil(List &L,address P){
+	if(IsEmpty(L)){
+		insertFirst(L,P);
+	}else if(IsOneElement(L)){
+		insertAfter(L,L,P);
+	}else{
+		addMobil(L->Next,P);
+	}	
+}
+
+void delFirst(List &L){
+	address P;
+	P = L;
+	L = L->Next;
+	delete(P);
+}
+
+void delMobil(List &L,int select,int no){
+	if(!IsEmpty(L)){
+		no++;
+		if(no == select)
+			delFirst(L);
+		else
+			delMobil(L->Next,select,no);
+	}else{}
+}
+
+void updateTarif(List &L,int biaya,int select,int no){
+	if(!IsEmpty(L)){
+		no++;
+		if(no == select)
+			L->biayaSewa = biaya;
+		else
+			updateTarif(L->Next,biaya,select,no);
+	}else{}
+}
+
+void Rent(List &L,infotype &tnkb,int &biayasewa,pos pilih,int no){
+	if(!IsEmpty(L)){
+		no++;
+		if(no==pilih){
+			L->sewa = 1;
+			tnkb = L->NoTNKB;
+			biayasewa = L->biayaSewa;
+		}else
+			Rent(L->Next,tnkb,biayasewa,pilih,no);
+	}
+}
+
+void printMobil(List L,int no){
+	if(IsEmpty(L)){
+		// cout<<"-----------------------------------------------------------------------------------------"<<endl;
+	}else{
+		no++;
+		cout<<"|"<<setw(4)<<no<<"|"<<setw(12)<<L->NoTNKB<<"|"<<setw(17)<<L->Merk<<"|"<<setw(12)<<L->Warna<<"|"
+		<<setw(9)<<L->Tahun<<"|"<<setw(11)<<L->biayaSewa<<"|";
+		if(L->sewa==0)
+			cout<<setw(17)<<"TERSEDIA|"<<endl;
+		else
+			cout<<setw(17)<<"DISEWAKAN|"<<endl;
+		printMobil(L->Next,no);
+	}
+}
+
+void availableMobil(List L,int no){
+	if(IsEmpty(L)){
+		// cout<<"-----------------------------------------------------------------------------------------"<<endl;
+	}else{
+		if(L->sewa == 0){
+			no++;
+			cout<<"|"<<setw(4)<<no<<"|"<<setw(12)<<L->NoTNKB<<"|"<<setw(17)<<L->Merk<<"|"<<setw(12)<<L->Warna<<"|"
+			<<setw(9)<<L->Tahun<<"|"<<setw(11)<<L->biayaSewa<<"|"<<endl;		
+		}else{}
+
+		availableMobil(L->Next,no);
+	}
+}
+
+void inisialisasiMobil(List &L,infotype tnkb){
+	if(IsEmpty(L)){
+
+	}else{
+		if(L->NoTNKB == tnkb)
+			L->sewa = 0;
+		inisialisasiMobil(L->Next,tnkb);
+	}
+}
+
+
+//Driver
+void CreateEmpty(Queue *D){
+	(*D).Head = (*D).Tail = -1;
+}
+
+bool isEmpty(Queue D){
+	return (D.Head == -1 && D.Tail == -1);
+}
+
+bool isFull(Queue D){
+	return (D.Head < D.Tail && D.Tail - D.Head == DRIVER-1||
+		D.Head > D.Tail && D.Head - D.Tail == 1);
+}
+
+bool isOneElement(Queue D){
+	return (D.Head == D.Tail && D.Head != -1);
+}
+
+bool isTask(Queue D){
+	return (D.service[D.Head] == 1);
+}
+
+void addDriver(Queue *D,infotype ktp,infotype nama,infotype alamat,infotype usia){
+	if(!isFull(*D)){
+		if(isEmpty(*D)){ //jika masih kosong
+			(*D).Head = (*D).Tail = 0;
+			(*D).noKTP[(*D).Head] = ktp;
+			(*D).Nama[(*D).Head] = nama;
+			(*D).Alamat[(*D).Head] = alamat;
+			(*D).Usia[(*D).Head] = usia;
+			(*D).service[(*D).Head] = 0;
+		}else{
+			if((*D).Tail == DRIVER-1){ //jika sirkuler
+				(*D).Tail = 0;
+			}else{
+				(*D).Tail++;
+			}
+			//pengisian 
+			(*D).noKTP[(*D).Tail] = ktp;
+			(*D).Nama[(*D).Tail] = nama;
+			(*D).Alamat[(*D).Tail] = alamat;
+			(*D).Usia[(*D).Tail] = usia;
+			(*D).service[(*D).Tail] = 0;
+		}
+	}
+}
+
+void updateDriver(Queue *D,infotype update,pos select){
+	int element = 0;
+	if((*D).Head <= (*D).Tail)
+		(*D).Usia[(*D).Head + select - 1] = update;
+	else{ //sirkuler
+		//count element head to MAX element
+		for(pos i = (*D).Head; i <= DRIVER-1;i++)
+			element++;
+
+		if(select<=element)
+			(*D).Usia[(*D).Head + select - 1] = update;
+		else
+			(*D).Usia[element - select - 1] = update;
+	}
+}
+
+void delDriver(Queue *D,pos select){
+	int element = 0;
+
+	if(select>=1 && select<=DRIVER){
+		if((*D).Head <= (*D).Tail){
+			for(pos i = (*D).Head+select-1; i < (*D).Tail;i++){
+				(*D).Nama[i] = (*D).Nama[i+1];
+				(*D).noKTP[i] = (*D).noKTP[i+1];
+				(*D).Alamat[i] = (*D).Alamat[i+1];
+				(*D).Usia[i] = (*D).Usia[i+1];
+				(*D).service[i] = (*D).service[i+1];
+			}
+			(*D).Tail--;
+
+		}else{
+
+			for(pos i = (*D).Head; i <= DRIVER-1;i++)
+				element++;
+
+			if(select<=element){ //jika masih normal
+				for(pos i = (*D).Head; i < DRIVER-1;i++){
+					(*D).Nama[i] = (*D).Nama[i+1];
+					(*D).noKTP[i] = (*D).noKTP[i+1];
+					(*D).Alamat[i] = (*D).Alamat[i+1];
+					(*D).Usia[i] = (*D).Usia[i+1];
+					(*D).service[i] = (*D).service[i+1];
+				}
+
+				for(pos i = 0; i < (*D).Tail;i++){
+					(*D).Nama[i] = (*D).Nama[i+1];
+					(*D).noKTP[i] = (*D).noKTP[i+1];
+					(*D).Alamat[i] = (*D).Alamat[i+1];
+					(*D).Usia[i] = (*D).Usia[i+1];
+					(*D).service[i] = (*D).service[i+1];
+				}
+				(*D).Tail--;
+
+			}else{//sirkuler
+
+				if((*D).Tail == 0)
+					(*D).Tail = DRIVER-1;
+
+				else{
+					for(pos i = element - select-1; i < (*D).Tail;i++){
+						(*D).Nama[i] = (*D).Nama[i+1];
+						(*D).noKTP[i] = (*D).noKTP[i+1];
+						(*D).Alamat[i] = (*D).Alamat[i+1];
+						(*D).Usia[i] = (*D).Usia[i+1];
+						(*D).service[i] = (*D).service[i+1];
+					}
+					(*D).Tail--;
+				}
+			}
+		}
+	}else{
+		cout<<"Pilihan yang anda masukkan tidak tersedia"<<endl;
+	}
+}
+
+void Task(Queue *D,infotype *nama){
+	Queue temp; 
+	if(!isEmpty(*D)){
+		*nama = (*D).Nama[(*D).Head];
+		(*D).service[(*D).Head] = 1;
+		temp = *D;
+
+		(*D).Head++;
+		if(++(*D).Tail == MAX)
+			(*D).Tail = 0;
+		else
+			(*D).Tail;
+
+		(*D).noKTP[(*D).Tail] = temp.noKTP[temp.Head];
+		(*D).Nama[(*D).Tail] = temp.Nama[temp.Head];
+		(*D).Alamat[(*D).Tail] = temp.Nama[temp.Head];
+		(*D).Usia[(*D).Tail] = temp.Usia[temp.Head];
+		(*D).service[(*D).Tail] = temp.service[temp.Head];
+
+	}else{
+		cout<<"Belum ada data yang tersimpan"<<endl;
+	}
+}
