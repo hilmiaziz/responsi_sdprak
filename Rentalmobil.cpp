@@ -869,3 +869,412 @@ void Task(Queue *D,infotype *nama){
 		cout<<"Belum ada data yang tersimpan"<<endl;
 	}
 }
+
+void printDriver(Queue D){
+	pos no = 0;
+	if(isEmpty(D)){
+		cout<<"Belum ada data driver yang tersimpan"<<endl;
+	}else{
+		cout<<"-----------------------------------------------------------------------------------------------------------------"<<endl;
+		cout<<"|No |"<<"\t No KTP \t|"<<"\tNama Driver\t|"<<"\t\tAlamat\t\t|"<<"\tUsia\t|"<<"\tStatus\t|"<<endl;
+		cout<<"-----------------------------------------------------------------------------------------------------------------"<<endl;
+		if(D.Head <= D.Tail){
+			for(pos i = D.Head; i <= D.Tail;i++){
+				no++;
+				cout<<"|"<<setw(3)<<no<<"|"<<setw(19)<<D.noKTP[i]<<"|"<<setw(23)<<D.Nama[i]<<"|"
+				<<setw(31)<<D.Alamat[i]<<"|"<<setw(9)<<D.Usia[i]<<" Tahun|";
+				if(D.service[i]==0)
+					cout<<setw(16)<<"Tersedia |"<<endl;
+				else
+					cout<<setw(16)<<"Bertugas |"<<endl;
+			}
+		}else{ //sirkuler
+			for(pos i = D.Head; i <= DRIVER-1;i++){
+				no++;
+				cout<<"|"<<setw(3)<<no<<"|"<<setw(19)<<D.noKTP[i]<<"|"<<setw(23)<<D.Nama[i]<<"|"
+				<<setw(31)<<D.Alamat[i]<<"|"<<setw(9)<<D.Usia[i]<<" Tahun|";
+				if(D.service[i]==0)
+					cout<<setw(16)<<"Tersedia |"<<endl;
+				else
+					cout<<setw(16)<<"Bertugas |"<<endl;
+			}
+
+			for(pos i = 0; i <= D.Tail;i++){
+				no++;
+				cout<<"|"<<setw(3)<<no<<"|"<<setw(19)<<D.noKTP[i]<<"|"<<setw(23)<<D.Nama[i]<<"|"
+				<<setw(31)<<D.Alamat[i]<<"|"<<setw(9)<<D.Usia[i]<<" Tahun|";
+				if(D.service[i]==0)
+					cout<<setw(17)<<"Tersedia |"<<endl;
+				else
+					cout<<setw(17)<<"Bertugas |"<<endl;
+			}
+		}
+		cout<<"-----------------------------------------------------------------------------------------------------------------"<<endl;
+	}
+}
+
+void inisialisasiDriver(Queue *D,infotype nama){
+	if(isEmpty(*D)){
+
+	}else{
+		if((*D).Head <= (*D).Tail){
+			for(pos i = (*D).Head; i <= (*D).Tail;i++){
+				if((*D).Nama[i] == nama){
+					(*D).service[i] = 0;
+					break;
+				}
+			}
+		}else{
+			for(pos i = (*D).Head; i <= DRIVER-1;i++){
+				if((*D).Nama[i] == nama){
+					(*D).service[i] = 0;
+					break;
+				}
+			}
+
+			for(pos i = 0; i <= (*D).Tail;i++){
+				if((*D).Nama[i] == nama){
+					(*D).service[i] = 0;
+					break;
+				}
+			}
+		}
+	}
+}
+
+
+//Konsumen
+void CreateEmpty(Konsumen *K){
+	(*K).Head = (*K). Tail = -1;
+}
+
+bool isEmpty(Konsumen K){
+	return (K.Head == -1 && K.Tail == -1);
+}
+
+bool isFull(Konsumen K){
+	return (K.Head < K.Tail && K.Tail - K.Head == MAX-1 ||
+		K.Head > K.Tail && K.Head - K.Tail ==1);
+}
+
+bool isOneElement(Konsumen K){
+	return (K.Head == K.Tail && K.Head != -1);
+}
+
+void addKonsumen(Konsumen *K,infotype ktp,infotype nama,infotype alamat){
+	if(!isFull(*K)){
+		if(isEmpty(*K)){ //jika masih kosong
+			(*K).Head = (*K).Tail = 0;
+			(*K).noKTP[(*K).Head] = ktp;
+			(*K).Nama[(*K).Head] = nama;
+			(*K).Alamat[(*K).Head] = alamat;
+		}else{
+			if((*K).Tail == MAX-1){ //jika sirkuler
+				(*K).Tail = 0;
+			}else{
+				(*K).Tail++;
+			}
+			//pengisian 
+			(*K).noKTP[(*K).Tail] = ktp;
+			(*K).Nama[(*K).Tail] = nama;
+			(*K).Alamat[(*K).Tail] = alamat;
+		}
+	}else
+		cout<<"Data Konsumen Yang Akan Menyewa Penuh"<<endl;	
+}
+
+void printKonsumen(Konsumen K){
+	pos no = 0;
+	if(isEmpty(K)){
+		cout<<"Belum ada data konsumen yang tersimpan"<<endl;
+	}else{
+		cout<<"---------------------------------------------------------------------------------"<<endl;
+		cout<<"|"<<" No |"<<"\t  No KTP  \t|"<<"\tNama Konsumen\t|"<<"\t\tAlamat\t\t|"<<endl;
+		cout<<"---------------------------------------------------------------------------------"<<endl;
+		
+		if(K.Head <= K.Tail){
+			for(pos i = K.Head; i <= K.Tail;i++){
+				no++;
+				cout<<"|"<<setw(4)<<no<<"|"<<setw(18)<<K.noKTP[i]<<"|"<<setw(23)<<K.Nama[i]
+				<<"|"<<setw(31)<<K.Alamat[i]<<"|"<<endl;
+			}
+		}else{ //sirkuler
+			for(pos i = K.Head; i <= MAX-1;i++){
+				no++;
+				cout<<"|"<<setw(4)<<no<<"|"<<setw(18)<<K.noKTP[i]<<"|"<<setw(23)<<K.Nama[i]
+				<<"|"<<setw(31)<<K.Alamat[i]<<"|"<<endl;
+			}
+
+			for(pos i = 0; i <= K.Tail;i++){
+				no++;
+				cout<<"|"<<setw(4)<<no<<"|"<<setw(18)<<K.noKTP[i]<<"|"<<setw(23)<<K.Nama[i]
+				<<"|"<<setw(31)<<K.Alamat[i]<<"|"<<endl;
+			}
+		}
+		cout<<"---------------------------------------------------------------------------------"<<endl;
+		
+	}	
+}
+
+void delKonsumen(Konsumen *K,pos select){
+	int element = 0;
+
+	if(select>=1 && select<=MAX){
+		if((*K).Head <= (*K).Tail){
+			for(pos i = (*K).Head+select-1; i < (*K).Tail;i++){
+				(*K).Nama[i] = (*K).Nama[i+1];
+				(*K).noKTP[i] = (*K).noKTP[i+1];
+				(*K).Alamat[i] = (*K).Alamat[i+1];
+
+			}
+			(*K).Tail--;
+
+		}else{
+
+			for(pos i = (*K).Head; i <= MAX-1;i++)
+				element++;
+
+			if(select<=element){ //jika masih normal
+				for(pos i = (*K).Head; i < MAX-1;i++){
+					(*K).Nama[i] = (*K).Nama[i+1];
+					(*K).noKTP[i] = (*K).noKTP[i+1];
+					(*K).Alamat[i] = (*K).Alamat[i+1];
+				}
+
+				for(pos i = 0; i < (*K).Tail;i++){
+					(*K).Nama[i] = (*K).Nama[i+1];
+					(*K).noKTP[i] = (*K).noKTP[i+1];
+					(*K).Alamat[i] = (*K).Alamat[i+1];
+				}
+				(*K).Tail--;
+
+			}else{//sirkuler
+
+				if((*K).Tail == 0)
+					(*K).Tail = DRIVER-1;
+
+				else{
+					for(pos i = element - select-1; i < (*K).Tail;i++){
+						(*K).Nama[i] = (*K).Nama[i+1];
+						(*K).noKTP[i] = (*K).noKTP[i+1];
+						(*K).Alamat[i] = (*K).Alamat[i+1];
+					}
+					(*K).Tail--;
+				}
+			}
+		}
+	}else{
+		cout<<"Pilihan yang anda masukkan tidak tersedia"<<endl;
+	}
+}
+
+void delKonsumen(Konsumen *K,infotype *nama,infotype *alamat){
+	if(isEmpty(*K))
+		cout<<"Belum ada data konsumen yang tersimpan"<<endl;
+	else{
+		*nama = (*K).Nama[(*K).Head];
+		*alamat = (*K).Alamat[(*K).Head];
+		if(isOneElement(*K))
+			CreateEmpty(&(*K));
+		else{
+			if((*K).Head == MAX-1)
+				(*K).Head = 0;
+			else
+				(*K).Head++;
+		}
+			
+	}
+}
+
+
+//transaksi
+void CreateEmpty(Transaksi &T){
+	T = NULL;
+}
+
+bool IsEmpty(Transaksi T){
+	return (T==NULL);
+}
+
+bool IsOneElement(Transaksi T){
+	return(IsEmpty(T->Next));
+}
+
+void insertFirst(Transaksi &T,ID_Transaksi P){
+	P->Next = T;
+	T = P;
+}
+
+void insertAfter(Transaksi &T,ID_Transaksi sblm,ID_Transaksi P){
+	P->Next = sblm->Next;
+	sblm->Next = P;
+}
+
+infotype getNama(Konsumen K){
+	return(K.Nama[K.Head]);
+}
+
+ID_Transaksi Alokasi(infotype nama_Konsumen,infotype alamat,infotype tnkb,infotype nama_Driver,Date sewa,Date kembali,int biayasewa){
+	ID_Transaksi P = new(transaksi);
+
+	if(P == NULL)
+		return NULL;
+	else{
+		P->Nama_Konsumen = nama_Konsumen;
+		P->Alamat  = alamat;
+		P->NoTNKB = tnkb;
+		P->Nama_Driver = nama_Driver;
+		P->Sewa.Tanggal = sewa.Tanggal;
+		P->Sewa.Bulan = sewa.Bulan;
+		P->Sewa.Tahun = sewa.Tahun;
+		P->Kembali.Tanggal = kembali.Tanggal;
+		P->Kembali.Bulan = kembali.Bulan;
+		P->Kembali.Tahun = kembali.Tahun;
+		P->biayaSewa = biayasewa;
+		P->Next = NULL;
+	}
+	return P;
+}
+
+void addPenyewaan(Transaksi &T,ID_Transaksi P){
+	ID_Transaksi temp = T;
+	if(IsEmpty(T))
+		insertFirst(T,P);
+	else if(IsOneElement(T))
+		insertAfter(T,T,P);
+	else
+		addPenyewaan(T->Next,P);
+}
+
+void printPenyewaan(Transaksi T,int no){
+	if(IsEmpty(T)){
+
+	}else{
+		no++;
+		cout<<"|"<<setw(4)<<no<<"|"<<setw(13)<<T->NoTNKB<<"|"<<setw(19)<<T->Nama_Konsumen<<"|"<<setw(20)
+		<<T->Alamat<<"|"<<setw(19)<<T->Nama_Driver<<"|"<<setw(6)<<T->Sewa.Tanggal<<"-"<<T->Sewa.Bulan
+		<<"-"<<T->Sewa.Tahun<<"|"<<setw(6)<<T->Kembali.Tanggal<<"-"<<T->Kembali.Bulan
+		<<"-"<<T->Kembali.Tahun<<"|"<<endl;
+
+		printPenyewaan(T->Next,no);
+	}
+}
+
+
+//pembayaran
+void CreateEmpty(pembayaran &B){
+	B = NULL;
+}
+
+bool IsEmpty(pembayaran T){
+	return (T == NULL);
+}
+
+bool IsOneElement(pembayaran T){
+	return (IsEmpty(T->Next));
+}
+
+int hitungBayar(int denda,int sewa,int biaya){
+	int totbayar = 0;
+	totbayar = (biaya * sewa) + denda;
+	return totbayar; 
+}
+
+ID_Pembayaran Alokasi(infotype nama,infotype alamat,
+	infotype tnkb,infotype nama_driver,Date sewa,Date bayar,int denda,int totbiaya){
+	
+	ID_Pembayaran P = new (Pembayaran);
+
+	if(P == NULL)
+		return NULL;
+	else{
+		P->Nama_Konsumen = nama;
+		P->Alamat = alamat;
+		P->NoTNKB = tnkb;
+		P->Nama_Driver = nama_driver;
+		P->Sewa = sewa;
+		P->Bayar = bayar;
+		P->Denda = denda;
+		P->totBiaya = totbiaya;
+		P->Next = NULL;
+	}
+	return P;	
+}
+
+void insertFirst(pembayaran &B,ID_Pembayaran P){
+	P->Next = B;
+	B = P;
+}
+
+void insertAfter(pembayaran &B,ID_Pembayaran Prec,ID_Pembayaran P){
+	P->Next = Prec->Next;
+	Prec->Next = P;
+}
+
+void addPembayaran(pembayaran &B,ID_Pembayaran P){
+	if(IsEmpty(B))
+		insertFirst(B,P);
+	else if(IsOneElement(B))
+		insertAfter(B,B,P);
+	else
+		addPembayaran(B->Next,P);
+}
+
+
+void printPembayaran(pembayaran T,int no){
+	if(IsEmpty(T)){
+
+	}else{	
+			no++;
+			cout<<"|"<<setw(4)<<no<<"|"<<setw(13)<<T->NoTNKB<<"|"<<setw(19)<<T->Nama_Konsumen<<"|"<<setw(20)
+			<<T->Alamat<<"|"<<setw(19)<<T->Nama_Driver<<"|"<<setw(6)<<T->Sewa.Tanggal<<"-"<<T->Sewa.Bulan
+			<<"-"<<T->Sewa.Tahun<<"|"<<setw(6)<<T->Bayar.Tanggal<<"-"<<T->Bayar.Bulan<<"-"
+			<<T->Bayar.Tahun<<"|"<<setw(11)<<T->Denda<<"|"<<setw(13)<<T->totBiaya<<"|"<<endl;
+		
+		printPembayaran(T->Next,no);
+	}
+}
+
+void delPenyewaan(Transaksi &L){
+	ID_Transaksi P;
+	P = L;
+	L = L->Next;
+	delete(P);
+}
+
+void delTransaksi(Transaksi &T,infotype *nama_konsumen,infotype *alamat,infotype *tnkb,
+	Date *sewa,Date *kembali,infotype *nama_driver,int *biayasewa,pos select,int no){
+	if(!IsEmpty(T)){
+		no++;
+		if(no==select){
+			*nama_konsumen = T->Nama_Konsumen;
+			*alamat = T->Alamat;
+			*tnkb = T->NoTNKB;
+			*sewa = T->Sewa;
+			*kembali = T->Kembali;
+			*nama_driver = T->Nama_Driver;
+			*biayasewa = T->biayaSewa;
+			delPenyewaan(T);
+		}
+		else
+			delTransaksi(T->Next,nama_konsumen,alamat,tnkb,sewa,kembali,nama_driver,biayasewa,select,no);
+	}
+}
+
+void bayarSewa(infotype Nama_Driver,Date kembali,Date Bayar,Date Sewa,int biayaSewa,int &totdenda,int &totbayar){
+	int hari = 0;
+	int driver = 200000;
+	int denda = 100000;
+
+	if(Bayar.Tanggal - kembali.Tanggal >=1)
+		hari = Bayar.Tanggal - kembali.Tanggal;
+	else
+		hari = 0;
+
+	totdenda = hari * denda;
+	
+	if(Nama_Driver == "")
+		totbayar = hitungBayar(totdenda,kembali.Tanggal - Sewa.Tanggal,biayaSewa);
+	else
+		totbayar = hitungBayar(totdenda,kembali.Tanggal - Sewa.Tanggal,biayaSewa) + driver;
+}
